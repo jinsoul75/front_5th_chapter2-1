@@ -22,7 +22,7 @@
 //   `;
 // };
 import { products } from '../constants/products';
-
+import { renderBonusPts } from '../components/renderBousPts';
 const layout = () => {
   return `
   <div class="bg-gray-100 p-8">
@@ -71,52 +71,47 @@ const layout = () => {
 };
 
 export const CartPage = () => {
-  let sel;
-  let addBtn;
-  let cartDisp;
+  const bonusPts = 0;
   let lastSel;
-  let bonusPts = 0;
   let totalAmt = 0;
   let itemCnt = 0;
 
-  function main() {
-    const root = document.getElementById('app');
-    root.innerHTML = layout();
+  const root = document.getElementById('app');
+  root.innerHTML = layout();
 
-    sel = document.getElementById('product-select');
-    addBtn = document.getElementById('add-to-cart');
-    cartDisp = document.getElementById('cart-items');
+  const sel = document.getElementById('product-select');
+  const addBtn = document.getElementById('add-to-cart');
+  const cartDisp = document.getElementById('cart-items');
 
-    updateSelOpts();
-    calcCart();
-    setupEventListeners();
+  updateSelOpts();
+  calcCart();
+  setupEventListeners();
 
-    setTimeout(function () {
-      setInterval(function () {
-        const luckyItem = products[Math.floor(Math.random() * products.length)];
-        if (Math.random() < 0.3 && luckyItem.stock > 0) {
-          luckyItem.price = Math.round(luckyItem.price * 0.8);
-          alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
+  setTimeout(function () {
+    setInterval(function () {
+      const luckyItem = products[Math.floor(Math.random() * products.length)];
+      if (Math.random() < 0.3 && luckyItem.stock > 0) {
+        luckyItem.price = Math.round(luckyItem.price * 0.8);
+        alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
+        updateSelOpts();
+      }
+    }, 30000);
+  }, Math.random() * 10000);
+
+  setTimeout(function () {
+    setInterval(function () {
+      if (lastSel) {
+        const suggest = products.find(function (item) {
+          return item.id !== lastSel && item.stock > 0;
+        });
+        if (suggest) {
+          alert(suggest.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
+          suggest.price = Math.round(suggest.price * 0.95);
           updateSelOpts();
         }
-      }, 30000);
-    }, Math.random() * 10000);
-
-    setTimeout(function () {
-      setInterval(function () {
-        if (lastSel) {
-          const suggest = products.find(function (item) {
-            return item.id !== lastSel && item.stock > 0;
-          });
-          if (suggest) {
-            alert(suggest.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
-            suggest.price = Math.round(suggest.price * 0.95);
-            updateSelOpts();
-          }
-        }
-      }, 60000);
-    }, Math.random() * 20000);
-  }
+      }
+    }, 60000);
+  }, Math.random() * 20000);
 
   function updateSelOpts() {
     sel.innerHTML = '';
@@ -184,20 +179,9 @@ export const CartPage = () => {
       sum.appendChild(span);
     }
     updateStockInfo();
-    renderBonusPts();
+    renderBonusPts(bonusPts, totalAmt);
   }
-  const renderBonusPts = () => {
-    bonusPts = Math.floor(totalAmt / 1000);
-    let ptsTag = document.getElementById('loyalty-points');
-    const sum = document.getElementById('cart-total');
-    if (!ptsTag) {
-      ptsTag = document.createElement('span');
-      ptsTag.id = 'loyalty-points';
-      ptsTag.className = 'text-blue-500 ml-2';
-      sum.appendChild(ptsTag);
-    }
-    ptsTag.textContent = '(포인트: ' + bonusPts + ')';
-  };
+
   function updateStockInfo() {
     let infoMsg = '';
     products.forEach(function (item) {
@@ -292,6 +276,4 @@ export const CartPage = () => {
       }
     });
   }
-
-  main();
 };
