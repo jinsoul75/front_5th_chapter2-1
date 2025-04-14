@@ -13,13 +13,13 @@
     "test:basic": "vitest basic.test.js",
     "test:advanced": "vitest advanced.test.js",
     "test:ui": "vitest --ui",
-    "lint": "eslint . --ext .js",
-    "lint:fix": "eslint . --ext .js --fix",
+    "lint": "eslint \"src/**/*.{js,jsx}\"",
+    "lint:fix": "eslint \"src/**/*.{js,jsx}\" --fix",
     "format": "prettier --write .",
     "prepare": "husky install"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "src/**/*.{js,jsx}": [
       "eslint --fix",
       "prettier --write"
     ],
@@ -31,7 +31,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/user-event": "^14.6.1",
     "@vitest/ui": "^3.1.1",
-    "eslint": "9.24.0",
+    "eslint": "8.56.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "10.1.2",
     "eslint-plugin-prettier": "5.2.6",
