@@ -1,7 +1,7 @@
 import { updateStockInfo } from './updateStockInfo';
 import { renderBonusPts } from './renderBousPts';
 
-export const calcCart = (products, cartDisp, bonusPts) => {
+export const calculateCart = (products, cartDisp, bonusPts) => {
   let totalAmt = 0;
   let itemCnt = 0;
   const cartItems = cartDisp.children;
