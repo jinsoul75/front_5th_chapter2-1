@@ -86,7 +86,7 @@ export const CartPage = () => {
 
   const select = document.getElementById('product-select');
   const addCartButton = document.getElementById('add-to-cart');
-  const cartItems = document.getElementById('cart-items');
+  const cartContainerElement = document.getElementById('cart-items');
 
   updateSelectOptions(products, select);
 
@@ -96,7 +96,7 @@ export const CartPage = () => {
     bonusPoints = newBonusPoints;
   };
 
-  calculateCart(products, cartItems, bonusPoints, updateState);
+  calculateCart({ products, cartContainerElement, bonusPoints });
 
   setupEventListeners();
 
@@ -166,15 +166,15 @@ export const CartPage = () => {
             '<button class="remove-item bg-red-500 text-white px-2 py-1 rounded" data-product-id="' +
             itemToAdd.id +
             '">삭제</button></div>';
-          cartItems.appendChild(newItem);
+          cartContainerElement.appendChild(newItem);
           itemToAdd.stock--;
         }
-        calculateCart(products, cartItems, bonusPoints, updateState);
+        calculateCart({ products, cartContainerElement, bonusPoints });
         lastSelectedItem = selItem;
       }
     });
 
-    cartItems.addEventListener('click', function (event) {
+    cartContainerElement.addEventListener('click', function (event) {
       const target = event.target;
 
       if (
@@ -213,7 +213,7 @@ export const CartPage = () => {
           product.stock += removedQuantity;
           productElement.remove();
         }
-        calculateCart(products, cartItems, bonusPoints, updateState);
+        calculateCart({ products, cartContainerElement, bonusPoints });
       }
     });
   }
