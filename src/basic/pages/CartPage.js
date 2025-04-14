@@ -22,7 +22,7 @@
 //   `;
 // };
 import { products } from '../constants/products';
-import { updateSelOpts } from '../components/updateSelOpts';
+import { updateSelectOptions } from '../components/updateSelectOptions';
 import { calcCart } from '../components/calcCart';
 
 const layout = () => {
@@ -72,27 +72,31 @@ const layout = () => {
    `;
 };
 
+// 장바구니 페이지
 export const CartPage = () => {
-  let lastSel;
-  let bonusPts = 0;
+  // 마지막으로 선택한 다른 상품을 추천하기 위한 값
+  let lastSelectedItem;
+  // 장바구니의 총 금액에 따라 적립되는 포인트
+  let bonusPoints = 0;
+  let totalAmount = 0;
+  let itemCount = 0;
 
   const root = document.getElementById('app');
   root.innerHTML = layout();
 
-  const sel = document.getElementById('product-select');
-  const addBtn = document.getElementById('add-to-cart');
-  const cartDisp = document.getElementById('cart-items');
+  const select = document.getElementById('product-select');
+  const addCartButton = document.getElementById('add-to-cart');
+  const cartItems = document.getElementById('cart-items');
 
-  updateSelOpts(products, sel);
+  updateSelectOptions(products, select);
 
-  // calcCart 호출 시 필요한 상태와 콜백 전달
-  const updateState = (newTotalAmt, newItemCnt, newBonusPts) => {
-    totalAmt = newTotalAmt;
-    itemCnt = newItemCnt;
-    bonusPts = newBonusPts;
+  const updateState = (newTotalAmount, newItemCount, newBonusPoints) => {
+    totalAmount = newTotalAmount;
+    itemCount = newItemCount;
+    bonusPoints = newBonusPoints;
   };
 
-  calcCart(products, cartDisp, bonusPts, updateState);
+  calcCart(products, cartItems, bonusPoints, updateState);
   setupEventListeners();
 
   setTimeout(function () {
@@ -101,29 +105,29 @@ export const CartPage = () => {
       if (Math.random() < 0.3 && luckyItem.stock > 0) {
         luckyItem.price = Math.round(luckyItem.price * 0.8);
         alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
-        updateSelOpts(products, sel);
+        updateSelectOptions(products, select);
       }
     }, 30000);
   }, Math.random() * 10000);
 
   setTimeout(function () {
     setInterval(function () {
-      if (lastSel) {
+      if (lastSelectedItem) {
         const suggest = products.find(function (item) {
-          return item.id !== lastSel && item.stock > 0;
+          return item.id !== lastSelectedItem && item.stock > 0;
         });
         if (suggest) {
           alert(suggest.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
           suggest.price = Math.round(suggest.price * 0.95);
-          updateSelOpts(products, sel);
+          updateSelectOptions(products, select);
         }
       }
     }, 60000);
   }, Math.random() * 20000);
 
   function setupEventListeners() {
-    addBtn.addEventListener('click', function () {
-      const selItem = sel.value;
+    addCartButton.addEventListener('click', function () {
+      const selItem = select.value;
       const itemToAdd = products.find(function (p) {
         return p.id === selItem;
       });
@@ -157,15 +161,15 @@ export const CartPage = () => {
             '<button class="remove-item bg-red-500 text-white px-2 py-1 rounded" data-product-id="' +
             itemToAdd.id +
             '">삭제</button></div>';
-          cartDisp.appendChild(newItem);
+          cartItems.appendChild(newItem);
           itemToAdd.stock--;
         }
-        calcCart(products, cartDisp, bonusPts, updateState);
-        lastSel = selItem;
+        calcCart(products, cartItems, bonusPoints, updateState);
+        lastSelectedItem = selItem;
       }
     });
 
-    cartDisp.addEventListener('click', function (event) {
+    cartItems.addEventListener('click', function (event) {
       const tgt = event.target;
       if (tgt.classList.contains('quantity-change') || tgt.classList.contains('remove-item')) {
         const prodId = tgt.dataset.productId;
@@ -196,7 +200,7 @@ export const CartPage = () => {
           prod.stock += remQty;
           itemElem.remove();
         }
-        calcCart(products, cartDisp, bonusPts, updateState);
+        calcCart(products, cartItems, bonusPoints, updateState);
       }
     });
   }
