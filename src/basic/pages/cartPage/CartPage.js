@@ -26,7 +26,7 @@ import { updateSelectOptions } from '../../components/updateSelectOptions';
 import { calculateCart } from '../../components/calculateCart';
 import { applyLightningSale, suggestProduct } from '../../utils/promotions';
 import { setupIntervalWithDelay } from '../../utils';
-import { OutOfStockList, ProductSelector } from './components';
+import { OutOfStockList, ProductSelector, TotalDisplay, CartItemList } from './components';
 
 const layout = () => {
   return `
@@ -35,28 +35,10 @@ const layout = () => {
       <h1 class="text-2xl font-bold mb-4">장바구니</h1>
       
       <!-- 장바구니 아이템들이 들어갈 컨테이너 -->
-      <div id="cart-items">
-        <!-- 장바구니에 추가된 아이템들이 여기에 동적으로 추가됨 -->
-        <!-- 예시 아이템 구조:
-        <div id="p1" class="flex justify-between items-center mb-2">
-          <span>상품1 - 10000원 x 1</span>
-          <div>
-            <button class="quantity-change" data-change="-1">-</button>
-            <button class="quantity-change" data-change="1">+</button>
-            <button class="remove-item">삭제</button>
-          </div>
-        </div>
-        -->
-      </div>
+      ${CartItemList({ products })}
 
       <!-- 총액 표시 -->
-      <div id="cart-total" class="text-xl font-bold my-4">
-        총액: 0원
-        <!-- 할인이 적용되면 아래 span이 추가됨 -->
-        <span class="text-green-500 ml-2">(10.0% 할인 적용)</span>
-        <!-- 포인트가 있으면 아래 span이 추가됨 -->
-        <span id="loyalty-points" class="text-blue-500 ml-2">(포인트: 0)</span>
-      </div>
+      ${TotalDisplay({ total: 0 })}
 
       <!-- 상품 선택 및 추가 영역 -->
       ${ProductSelector({ products })}
