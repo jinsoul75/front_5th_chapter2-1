@@ -26,7 +26,7 @@ import { updateSelectOptions } from '../../components/updateSelectOptions';
 import { calculateCart } from '../../components/calculateCart';
 import { applyLightningSale, suggestProduct } from '../../utils/promotions';
 import { setupIntervalWithDelay } from '../../utils';
-import { OutOfStockList } from './components/OutOfStockList';
+import { OutOfStockList, ProductSelector } from './components';
 
 const layout = () => {
   return `
@@ -59,12 +59,7 @@ const layout = () => {
       </div>
 
       <!-- 상품 선택 및 추가 영역 -->
-      <select id="product-select" class="border rounded p-2 mr-2">
-        <option value="p1">상품1 - 10000원</option>
-        <option value="p2">상품2 - 20000원</option>
-        <!-- ... 다른 상품들 ... -->
-      </select>
-      <button id="add-to-cart" class="bg-blue-500 text-white px-4 py-2 rounded">추가</button>
+      ${ProductSelector({ products })}
 
       <!-- 재고 상태 표시 -->
       ${OutOfStockList({ products })}
