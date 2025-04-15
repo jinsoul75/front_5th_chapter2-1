@@ -1,3 +1,29 @@
-export default function ProductSelector() {
-  return <div>상품 선택</div>;
+import { Select } from '../../../components';
+import { Product } from '../../../types/product';
+
+// 습관: 타입이름에 props를 붙인다
+interface ProductSelectorProps {
+  products: Product[];
+  selectedProduct: Product;
+  onSelectProduct: (productId: string) => void;
+}
+
+export default function ProductSelector({
+  products,
+  selectedProduct,
+  onSelectProduct,
+}: ProductSelectorProps) {
+  return (
+    <Select
+      value={selectedProduct.id}
+      onChange={onSelectProduct}
+      className="border rounded p-2 mr-2"
+    >
+      {products.map((product) => (
+        <Select.Option key={product.id} value={product.id} disabled={product.stock === 0}>
+          {product.name} ({product.stock > 0 ? `재고: ${product.stock}` : '품절'})
+        </Select.Option>
+      ))}
+    </Select>
+  );
 }
