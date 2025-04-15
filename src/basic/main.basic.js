@@ -1,4 +1,4 @@
-import { CartPage } from './pages/CartPage';
+import { CartPage } from './pages/cartPage/CartPage';
 
 CartPage();
 

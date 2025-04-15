@@ -21,9 +21,12 @@
 //   </div>
 //   `;
 // };
-import { products } from '../constants/products';
-import { updateSelectOptions } from '../components/updateSelectOptions';
-import { calculateCart } from '../components/calculateCart';
+import { products } from '../../data/products';
+import { updateSelectOptions } from '../../components/updateSelectOptions';
+import { calculateCart } from '../../components/calculateCart';
+import { applyLightningSale, suggestProduct } from '../../utils/promotions';
+import { setupIntervalWithDelay } from '../../utils';
+import { OutOfStockList } from './components/OutOfStockList';
 
 const layout = () => {
   return `
@@ -64,9 +67,8 @@ const layout = () => {
       <button id="add-to-cart" class="bg-blue-500 text-white px-4 py-2 rounded">추가</button>
 
       <!-- 재고 상태 표시 -->
-      <div id="stock-status" class="text-sm text-gray-500 mt-2">
-        <!-- 재고 부족 상품 정보가 여기에 표시됨 -->
-      </div>
+      ${OutOfStockList({ products })}
+
     </div>
   </div>
    `;
@@ -74,7 +76,7 @@ const layout = () => {
 
 // 장바구니 페이지
 export const CartPage = () => {
-  // 마지막으로 선택한 다른 상품을 추천하기 위한 값
+  // 마지막으로 선택한 상품과 다른 상품을 추천하기 위한 값
   let lastSelectedItem;
   // 장바구니의 총 금액에 따라 적립되는 포인트
   const bonusPoints = 0;
@@ -92,33 +94,17 @@ export const CartPage = () => {
 
   setupEventListeners();
 
-  setTimeout(function () {
-    setInterval(function () {
-      const luckyItem = products[Math.floor(Math.random() * products.length)];
+  setupIntervalWithDelay(
+    applyLightningSale(products, select, updateSelectOptions),
+    30000,
+    Math.random() * 10000
+  );
 
-      if (Math.random() < 0.3 && luckyItem.stock > 0) {
-        luckyItem.price = Math.round(luckyItem.price * 0.8);
-        alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
-        updateSelectOptions(products, select);
-      }
-    }, 30000);
-  }, Math.random() * 10000);
-
-  setTimeout(function () {
-    setInterval(function () {
-      if (lastSelectedItem) {
-        const suggestItem = products.find(function (item) {
-          return item.id !== lastSelectedItem && item.stock > 0;
-        });
-
-        if (suggestItem) {
-          alert(suggestItem.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
-          suggestItem.price = Math.round(suggestItem.price * 0.95);
-          updateSelectOptions(products, select);
-        }
-      }
-    }, 60000);
-  }, Math.random() * 20000);
+  setupIntervalWithDelay(
+    suggestProduct(products, lastSelectedItem, select, updateSelectOptions),
+    60000,
+    Math.random() * 20000
+  );
 
   function setupEventListeners() {
     addCartButton.addEventListener('click', function () {
