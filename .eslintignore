@@ -16,3 +16,5 @@ vite.config.js
 # 기타 제외하고 싶은 파일/디렉토리
 coverage/
 .vscode/ 
+
+main.original.js
