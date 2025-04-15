@@ -77,9 +77,7 @@ export const CartPage = () => {
   // 마지막으로 선택한 다른 상품을 추천하기 위한 값
   let lastSelectedItem;
   // 장바구니의 총 금액에 따라 적립되는 포인트
-  let bonusPoints = 0;
-  let totalAmount = 0;
-  let itemCount = 0;
+  const bonusPoints = 0;
 
   const root = document.getElementById('app');
   root.innerHTML = layout();
@@ -89,12 +87,6 @@ export const CartPage = () => {
   const cartContainerElement = document.getElementById('cart-items');
 
   updateSelectOptions(products, select);
-
-  const updateState = (newTotalAmount, newItemCount, newBonusPoints) => {
-    totalAmount = newTotalAmount;
-    itemCount = newItemCount;
-    bonusPoints = newBonusPoints;
-  };
 
   calculateCart({ products, cartContainerElement, bonusPoints });
 
@@ -119,7 +111,7 @@ export const CartPage = () => {
           return item.id !== lastSelectedItem && item.stock > 0;
         });
 
-        if (suggest) {
+        if (suggestItem) {
           alert(suggestItem.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
           suggestItem.price = Math.round(suggestItem.price * 0.95);
           updateSelectOptions(products, select);
