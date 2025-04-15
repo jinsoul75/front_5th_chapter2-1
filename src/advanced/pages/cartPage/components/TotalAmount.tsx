@@ -1,3 +1,19 @@
 export default function TotalAmount() {
-  return <div>총액</div>;
+  const totalAmount = 0;
+  const discountRate = 0;
+  const loyaltyPoints = 0;
+
+  return (
+    <div id="cart-total" className="text-xl font-bold my-4">
+      {`총액: ${totalAmount}원`}
+
+      {discountRate ? (
+        <span className="text-green-500 ml-2">{`(${discountRate}% 할인 적용)`}</span>
+      ) : null}
+
+      <span id="loyalty-points" className="text-blue-500 ml-2">
+        {`(포인트: ${loyaltyPoints})`}
+      </span>
+    </div>
+  );
 }
