@@ -4,7 +4,7 @@ export const ProductSelector = ({ products }) => {
       ${products
         .map((product) => {
           return `
-          <option value="${product.id}">${product.name}</option>
+          <option ${product.stock === 0 ? 'disabled' : ''} value="${product.id}">${product.name} - ${product.price}원</option>
         `;
         })
         .join('')}

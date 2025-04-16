@@ -1,84 +1,63 @@
-// export const CartPage = () => {
-//   return `
-//   <div>
-//     <div>장바구니</div>
-//     <div>
-//         <div>
-//             <div>상품명</div>
-//             <button>삭제</button>
-//             <button>수량변경</button>
-//         </div>
-//     </div>
-//     <div>
-//         <select>
-//             <option value="p1">상품1</option>
-//         </select>
-//         <button>추가</button>
-//     </div>
-//     <div>
-//         <div>품절된 상품</div>
-//     </div>
-//   </div>
-//   `;
-// };
 import { products } from '../../data/products';
 import { updateSelectOptions } from '../../components/updateSelectOptions';
 import { calculateCart } from '../../components/calculateCart';
-import { applyLightningSale, suggestProduct } from '../../utils/promotions';
+import { updateProducts, applyLightningSale, suggestProduct } from '../../services';
 import { setupIntervalWithDelay } from '../../utils';
 import { OutOfStockList, ProductSelector, TotalDisplay, CartItemList } from './components';
 
-const layout = () => {
+const productsState = [...products];
+
+const Layout = () => {
   return `
   <div class="bg-gray-100 p-8">
     <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8">
       <h1 class="text-2xl font-bold mb-4">장바구니</h1>
       
       <!-- 장바구니 아이템들이 들어갈 컨테이너 -->
-      ${CartItemList({ products })}
+      ${CartItemList({ products: productsState })}
 
       <!-- 총액 표시 -->
       ${TotalDisplay({ total: 0 })}
 
       <!-- 상품 선택 및 추가 영역 -->
-      ${ProductSelector({ products })}
+      ${ProductSelector({ products: productsState })}
 
       <!-- 재고 상태 표시 -->
-      ${OutOfStockList({ products })}
+      ${OutOfStockList({ products: productsState })}
 
     </div>
   </div>
-   `;
+  `;
 };
 
 // 장바구니 페이지
 export const CartPage = () => {
   // 마지막으로 선택한 상품과 다른 상품을 추천하기 위한 값
+  // 습관: 선택한 변수에는 과거형을 쓴다.
   let lastSelectedItem;
   // 장바구니의 총 금액에 따라 적립되는 포인트
   const bonusPoints = 0;
 
+  // 레이아웃 DOM요소 추가
   const root = document.getElementById('app');
-  root.innerHTML = layout();
+  root.innerHTML = Layout();
 
   const select = document.getElementById('product-select');
   const addCartButton = document.getElementById('add-to-cart');
   const cartContainerElement = document.getElementById('cart-items');
 
-  updateSelectOptions(products, select);
-
-  calculateCart({ products, cartContainerElement, bonusPoints });
+  calculateCart({ products: productsState, cartContainerElement, bonusPoints });
 
   setupEventListeners();
 
   setupIntervalWithDelay(
-    applyLightningSale(products, select, updateSelectOptions),
+    applyLightningSale(productsState, updateProducts),
     30000,
     Math.random() * 10000
   );
 
   setupIntervalWithDelay(
-    suggestProduct(products, lastSelectedItem, select, updateSelectOptions),
+    suggestProduct(productsState, lastSelectedItem, select, updateProducts),
     60000,
     Math.random() * 20000
   );
