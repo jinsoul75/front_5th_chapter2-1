@@ -9,7 +9,7 @@ export default function CartItemList({ cartItems }: { cartItems: Product[] }) {
   return (
     <div id="cart-items">
       {cartItems.map((item) => (
-        <div id={item.id} className="flex justify-between items-center mb-2">
+        <div key={item.id} id={item.id} className="flex justify-between items-center mb-2">
           <span>{` ${item.name} - ${item.price}원 x ${item.stock}`}</span>
           <div>
             <Button
