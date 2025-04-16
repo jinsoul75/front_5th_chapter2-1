@@ -9,7 +9,7 @@
  * @param {HTMLSelectElement} select - 새로운 옵션으로 업데이트할 select 요소
  */
 
-export const updateSelectOptions = ({ products, select }) => {
+export const updateSelectOptions = (products, select) => {
   select.innerHTML = '';
 
   products.forEach((item) => {

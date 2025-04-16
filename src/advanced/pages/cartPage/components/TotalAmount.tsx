@@ -1,12 +1,12 @@
 export default function TotalAmount({
   totalPrice,
+  discountRate,
   bonusPoints,
 }: {
   totalPrice: number;
+  discountRate: number;
   bonusPoints: number;
 }) {
-  const discountRate = 0;
-
   return (
     <div id="cart-total" className="text-xl font-bold my-4">
       {`총액: ${totalPrice}원`}

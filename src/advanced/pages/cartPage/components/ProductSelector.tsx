@@ -15,7 +15,7 @@ export default function ProductSelector({
 }: ProductSelectorProps) {
   return (
     <Select
-      value={selectedProduct.id}
+      value={selectedProduct.id || products[0]?.id}
       onChange={onSelectProduct}
       className="border rounded p-2 mr-2"
     >
