@@ -1,5 +1,5 @@
 import { updateStockInfo } from './updateStockInfo';
-import { renderBonusPoints } from './renderBonusPoints';
+import { renderBonusPoints } from '../components/renderBonusPoints';
 
 export const calculateCart = ({ products, cartContainerElement, bonusPoints }) => {
   let totalAmount = 0;

@@ -1,3 +1,5 @@
 export * from './applyLightningSale';
 export * from './suggestProduct';
-export * from './updateProducts';
+export * from './updateSelectOptions';
+export * from './calculateCart';
+export * from './updateStockInfo';

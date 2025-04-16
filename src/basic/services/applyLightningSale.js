@@ -1,4 +1,4 @@
-export function applyLightningSale(products, updateProducts) {
+export function applyLightningSale({ products, select, updateSelectOptions }) {
   const luckyItem = products[Math.floor(Math.random() * products.length)];
 
   if (Math.random() < 0.3 && luckyItem.stock > 0) {
@@ -6,6 +6,6 @@ export function applyLightningSale(products, updateProducts) {
 
     alert('번개세일! ' + luckyItem.name + '이(가) 20% 할인 중입니다!');
 
-    updateProducts(luckyItem.id);
+    updateSelectOptions(products, select);
   }
 }

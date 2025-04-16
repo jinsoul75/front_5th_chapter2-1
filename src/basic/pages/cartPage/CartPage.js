@@ -1,11 +1,9 @@
 import { products } from '../../data/products';
-import { updateSelectOptions } from '../../components/updateSelectOptions';
-import { calculateCart } from '../../components/calculateCart';
-import { updateProducts, applyLightningSale, suggestProduct } from '../../services';
+import { updateSelectOptions } from '../../services/updateSelectOptions';
+import { calculateCart } from '../../services/calculateCart';
+import { applyLightningSale, suggestProduct } from '../../services';
 import { setupIntervalWithDelay } from '../../utils';
 import { OutOfStockList, ProductSelector, TotalDisplay, CartItemList } from './components';
-
-const productsState = [...products];
 
 const Layout = () => {
   return `
@@ -14,16 +12,16 @@ const Layout = () => {
       <h1 class="text-2xl font-bold mb-4">장바구니</h1>
       
       <!-- 장바구니 아이템들이 들어갈 컨테이너 -->
-      ${CartItemList({ products: productsState })}
+      ${CartItemList({ products })}
 
       <!-- 총액 표시 -->
       ${TotalDisplay({ total: 0 })}
 
       <!-- 상품 선택 및 추가 영역 -->
-      ${ProductSelector({ products: productsState })}
+      ${ProductSelector({ products })}
 
       <!-- 재고 상태 표시 -->
-      ${OutOfStockList({ products: productsState })}
+      ${OutOfStockList({ products })}
 
     </div>
   </div>
@@ -46,18 +44,18 @@ export const CartPage = () => {
   const addCartButton = document.getElementById('add-to-cart');
   const cartContainerElement = document.getElementById('cart-items');
 
-  calculateCart({ products: productsState, cartContainerElement, bonusPoints });
+  calculateCart({ products, cartContainerElement, bonusPoints });
 
   setupEventListeners();
 
   setupIntervalWithDelay(
-    applyLightningSale(productsState, updateProducts),
+    applyLightningSale({ products, select, updateSelectOptions }),
     30000,
     Math.random() * 10000
   );
 
   setupIntervalWithDelay(
-    suggestProduct(productsState, lastSelectedItem, select, updateProducts),
+    suggestProduct({ products, lastSelectedItem, select, updateSelectOptions }),
     60000,
     Math.random() * 20000
   );

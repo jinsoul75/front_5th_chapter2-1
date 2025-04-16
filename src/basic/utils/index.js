@@ -1,1 +1,1 @@
-export * from './interval';
+export * from './setupIntervalWithDelay';

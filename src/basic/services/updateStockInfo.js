@@ -1,5 +1,6 @@
 export const updateStockInfo = (products) => {
   let infoMsg = '';
+
   products.forEach(function (item) {
     if (item.stock < 5) {
       infoMsg +=
@@ -9,6 +10,7 @@ export const updateStockInfo = (products) => {
         '\n';
     }
   });
+
   const stockInfo = document.getElementById('stock-status');
   stockInfo.textContent = infoMsg;
 };
