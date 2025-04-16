@@ -7,8 +7,17 @@ import { useCart } from './hooks';
 export default function CartPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product>(products[0]);
 
-  const { discountRate, cartItems, totalPrice, bonusPoints, addToCart, productsOptions } =
-    useCart();
+  const {
+    removeFromCart,
+    discountRate,
+    cartItems,
+    totalPrice,
+    bonusPoints,
+    addToCart,
+    productsOptions,
+    increaseQuantity,
+    decreaseQuantity,
+  } = useCart();
 
   const handleSelectProduct = (productId: string) => {
     const product = products.find((product) => product.id === productId);
@@ -24,7 +33,12 @@ export default function CartPage() {
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8">
       <h1 className="text-2xl font-bold mb-4">장바구니</h1>
-      <CartItemList cartItems={cartItems} />
+      <CartItemList
+        cartItems={cartItems}
+        removeFromCart={removeFromCart}
+        increaseQuantity={increaseQuantity}
+        decreaseQuantity={decreaseQuantity}
+      />
       <TotalAmount totalPrice={totalPrice} discountRate={discountRate} bonusPoints={bonusPoints} />
       <ProductSelector
         products={productsOptions}

@@ -10,20 +10,20 @@ export const useCart = () => {
   const [bonusPoints, setBonusPoints] = useState<number>(0);
   const [discountRate, setDiscountRate] = useState<number>(0);
 
-  const addToCart = (selectedProduct: Product | null) => {
+  const addToCart = (selectedProduct: Product | null, amount = 1) => {
     const product = productsOptions.find((product) => product.id === selectedProduct?.id);
 
     if (product) {
       if (product.stock > 0) {
         const newProductOptions = productsOptions.map((item) =>
-          item.id === product.id ? { ...item, stock: item.stock - 1 } : item
+          item.id === product.id ? { ...item, stock: item.stock - amount } : item
         );
         setProductsOptions(newProductOptions);
 
         if (cartItems.map((item) => item.id).includes(product.id)) {
           setCartItems(
             cartItems.map((item) =>
-              item.id === product.id ? { ...item, stock: item.stock + 1 } : item
+              item.id === product.id ? { ...item, stock: item.stock + amount } : item
             )
           );
         } else {
@@ -31,6 +31,38 @@ export const useCart = () => {
         }
       } else {
         alert('재고가 부족합니다.');
+      }
+    }
+  };
+
+  const removeFromCart = (productId: string) => {
+    const newCartItems = cartItems.filter((item) => item.id !== productId);
+    setCartItems(newCartItems);
+  };
+
+  const increaseQuantity = (productId: string, amount = 1) => {
+    const selectedProduct = cartItems.find((item) => item.id === productId);
+
+    if (selectedProduct) {
+      const newStock = selectedProduct.stock + amount;
+      setCartItems(
+        cartItems.map((item) => (item.id === productId ? { ...item, stock: newStock } : item))
+      );
+    }
+  };
+
+  const decreaseQuantity = (productId: string, amount = 1) => {
+    const selectedProduct = cartItems.find((item) => item.id === productId);
+    if (selectedProduct) {
+      const newStock = selectedProduct.stock - amount;
+      if (newStock <= 0) {
+        // 재고가 0 이하가 되면 cartItems에서 제거
+        removeFromCart(productId);
+      } else {
+        // 재고가 남아 있으면 수량 업데이트
+        setCartItems(
+          cartItems.map((item) => (item.id === productId ? { ...item, stock: newStock } : item))
+        );
       }
     }
   };
@@ -87,5 +119,15 @@ export const useCart = () => {
     }
   }, [cartItems]);
 
-  return { cartItems, totalPrice, bonusPoints, addToCart, productsOptions, discountRate };
+  return {
+    cartItems,
+    totalPrice,
+    bonusPoints,
+    addToCart,
+    productsOptions,
+    discountRate,
+    removeFromCart,
+    increaseQuantity,
+    decreaseQuantity,
+  };
 };
