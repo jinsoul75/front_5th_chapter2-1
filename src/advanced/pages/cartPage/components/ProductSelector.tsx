@@ -21,7 +21,7 @@ export default function ProductSelector({
     >
       {products.map((product) => (
         <Select.Option key={product.id} value={product.id} disabled={product.stock === 0}>
-          {product.name} ({product.stock > 0 ? `재고: ${product.stock}` : '품절'})
+          {`${product.name} - ${product.price}원`}
         </Select.Option>
       ))}
     </Select>
