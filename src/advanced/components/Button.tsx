@@ -8,7 +8,7 @@ interface ButtonProps {
 
 export default function Button({ children, className, ...props }: ButtonProps) {
   return (
-    <button className={`bg-blue-500 text-white px-4 py-2 rounded ${className}`} {...props}>
+    <button className={`text-white rounded ${className}`} {...props}>
       {children}
     </button>
   );

@@ -1,7 +1,11 @@
-export default function TotalAmount() {
-  const totalAmount = 0;
+export default function TotalAmount({
+  totalAmount,
+  point,
+}: {
+  totalAmount: number;
+  point: number;
+}) {
   const discountRate = 0;
-  const loyaltyPoints = 0;
 
   return (
     <div id="cart-total" className="text-xl font-bold my-4">
@@ -12,7 +16,7 @@ export default function TotalAmount() {
       ) : null}
 
       <span id="loyalty-points" className="text-blue-500 ml-2">
-        {`(포인트: ${loyaltyPoints})`}
+        {`(포인트: ${point})`}
       </span>
     </div>
   );
