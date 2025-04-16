@@ -9,6 +9,7 @@ export const renderBonusPoints = ({ bonusPoints, totalAmount }) => {
     loyaltyPointsElement = document.createElement('span');
     loyaltyPointsElement.id = 'loyalty-points';
     loyaltyPointsElement.className = 'text-blue-500 ml-2';
+
     sum.appendChild(loyaltyPointsElement);
   }
 

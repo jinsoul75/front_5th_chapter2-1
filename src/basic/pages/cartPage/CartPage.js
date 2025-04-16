@@ -29,7 +29,7 @@ const Layout = () => {
 };
 
 // 장바구니 페이지
-export const CartPage = () => {
+export const CartPage = ({ root }) => {
   // 마지막으로 선택한 상품과 다른 상품을 추천하기 위한 값
   // 습관: 선택한 변수에는 과거형을 쓴다.
   let lastSelectedItem;
@@ -37,7 +37,6 @@ export const CartPage = () => {
   const bonusPoints = 0;
 
   // 레이아웃 DOM요소 추가
-  const root = document.getElementById('app');
   root.innerHTML = Layout();
 
   const select = document.getElementById('product-select');
@@ -61,17 +60,20 @@ export const CartPage = () => {
   );
 
   function setupEventListeners() {
-    addCartButton.addEventListener('click', function () {
-      const selItem = select.value;
+    // 추가 버튼 클릭시
+    // 있으면 수량 증가
+    // 없으면 새로 생성
+    addCartButton.addEventListener('click', () => {
+      const selectedItem = select.value;
 
-      const itemToAdd = products.find(function (p) {
-        return p.id === selItem;
-      });
+      const itemToAdd = products.find((product) => product.id === selectedItem);
+
       if (itemToAdd && itemToAdd.stock > 0) {
         const item = document.getElementById(itemToAdd.id);
 
         if (item) {
           const newQuantity = parseInt(item.querySelector('span').textContent.split('x ')[1]) + 1;
+
           if (newQuantity <= itemToAdd.stock) {
             item.querySelector('span').textContent =
               itemToAdd.name + ' - ' + itemToAdd.price + '원 x ' + newQuantity;
@@ -102,11 +104,11 @@ export const CartPage = () => {
           itemToAdd.stock--;
         }
         calculateCart({ products, cartContainerElement, bonusPoints });
-        lastSelectedItem = selItem;
+        lastSelectedItem = selectedItem;
       }
     });
 
-    cartContainerElement.addEventListener('click', function (event) {
+    cartContainerElement.addEventListener('click', (event) => {
       const target = event.target;
 
       if (
