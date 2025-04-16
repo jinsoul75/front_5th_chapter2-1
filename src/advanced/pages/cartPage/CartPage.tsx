@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CartItemList, TotalAmount, ProductSelector, SoldOutNotice } from './components';
+import { CartItemList, TotalAmount, ProductSelector, OutOfStockList } from './components';
 import { Product } from '../../types/product';
 import { products } from '../../data';
 import Button from '../../components/Button';
@@ -34,7 +34,7 @@ export default function CartPage() {
       <Button className={'bg-blue-500 px-4 py-2'} onClick={handleAddProduct}>
         추가
       </Button>
-      <SoldOutNotice />
+      <OutOfStockList products={productsOptions} />
     </div>
   );
 }
