@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { CartItemList, TotalAmount, ProductSelector, OutOfStockList } from './components';
 import { Product } from '../../types/product';
 import { products } from '../../data';
-import Button from '../../components/Button';
 import { useCart } from './hooks';
+import Button from '../../components/Button';
+
 export default function CartPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product>(products[0]);
 

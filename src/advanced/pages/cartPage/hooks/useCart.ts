@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Product } from '../../../types';
 import { calculatePoints } from '../../../services';
 import { products } from '../../../data';
-import { calculateDiscount } from '../../../services/calculrateDiscount';
+import { calculateDiscount } from '../../../services/calculateDiscount';
 
 export const useCart = () => {
   const [productsOptions, setProductsOptions] = useState<Product[]>(products);
@@ -45,13 +45,9 @@ export const useCart = () => {
     const selectedProduct = cartItems.find((item) => item.id === productId);
 
     if (selectedProduct) {
-      const newStock = selectedProduct.stock + amount;
-      setCartItems(
-        cartItems.map((item) => (item.id === productId ? { ...item, stock: newStock } : item))
-      );
+      addToCart(selectedProduct, amount);
     }
   };
-
   const decreaseQuantity = (productId: string, amount = 1) => {
     const selectedProduct = cartItems.find((item) => item.id === productId);
     if (selectedProduct) {
