@@ -1,4 +1,4 @@
-import { Product } from '../types/product';
+import { Product } from '../../../types/product';
 
 export const getStockStatus = (products: Product[], lackStock: number = 5) => {
   let stockStatus = '';

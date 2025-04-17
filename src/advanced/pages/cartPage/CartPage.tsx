@@ -22,6 +22,7 @@ export default function CartPage() {
 
   const handleSelectProduct = (productId: string) => {
     const product = products.find((product) => product.id === productId);
+
     if (product) {
       setSelectedProduct(product);
     }

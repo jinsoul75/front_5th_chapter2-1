@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Product } from '../../../types';
-import { calculatePoints } from '../../../services';
+import { applyLightningSale, calculatePoints } from '../services';
 import { products } from '../../../data';
-import { calculateDiscount } from '../../../services/calculateDiscount';
+import { calculateDiscount } from '../services/calculateDiscount';
+import { setupIntervalWithDelay } from '../../../utils';
 
 export const useCart = () => {
   const [productsOptions, setProductsOptions] = useState<Product[]>(products);
@@ -48,6 +49,7 @@ export const useCart = () => {
       addToCart(selectedProduct, amount);
     }
   };
+
   const decreaseQuantity = (productId: string, amount = 1) => {
     const selectedProduct = cartItems.find((item) => item.id === productId);
     if (selectedProduct) {
@@ -78,13 +80,23 @@ export const useCart = () => {
     }
   }, [cartItems]);
 
+  useEffect(() => {
+    const lightningSaleRate = 0.2;
+
+    const newPriceProducts = productsOptions.map((item) => ({
+      ...item,
+      price: item.price * (1 - lightningSaleRate / 100),
+    }));
+    console.log('newPriceProducts', newPriceProducts);
+  }, [productsOptions]);
+
   return {
     cartItems,
     totalPrice,
     bonusPoints,
-    addToCart,
-    productsOptions,
     discountRate,
+    productsOptions,
+    addToCart,
     removeFromCart,
     increaseQuantity,
     decreaseQuantity,

@@ -1,4 +1,4 @@
-import { getStockStatus } from '../../../services';
+import { getStockStatus } from '../services';
 import { Product } from '../../../types';
 
 export default function OutOfStockList({ products }: { products: Product[]; lackStock?: number }) {

@@ -18,7 +18,7 @@ export default defineConfig({
     outDir: 'dist',
   },
   server: {
-    open: '/index.advanced.html',
+    open: '/index.html',
   },
   resolve: {
     alias: {
