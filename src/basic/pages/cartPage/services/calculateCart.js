@@ -1,16 +1,22 @@
 import { updateStockInfo } from './updateStockInfo';
-import { renderBonusPoints } from '../../../components/renderBonusPoints';
+import { renderBonusPoints } from './renderBonusPoints';
 // 각 상품에 10개 이상 구매시 상품별 할인 p1 10% p2 15% p3 20% p4 5% p5 25%
 // 30개 이상 구매시 25% 할인 -> 개별 할인과 구매 할인중 큰 할인율 적용
 // 화요일에는 추가 10% 할인 -> 기존 할인율과 비교해서 더 큰 할인율 적용
 
-export const calculateCart = ({ products, cartContainerElement, bonusPoints }) => {
+// 습관: 매직넘버들은 주입으로 받는다.
+export const calculateCart = (
+  { products, cartContainerElement, bonusPoints },
+  individualDiscounts = { p1: 0.1, p2: 0.15, p3: 0.2, p4: 0.05, p5: 0.25 },
+  bulkDiscountThreshold = 30,
+  bulkDiscountRate = 0.25,
+  tuesdayDiscountRate = 0.1
+) => {
   let totalAmount = 0;
   let itemCount = 0;
+  let subtotalBeforeDiscount = 0;
 
   const cartItems = cartContainerElement.children;
-
-  let subtotalBeforeDiscount = 0;
 
   for (let i = 0; i < cartItems.length; i++) {
     (function () {
@@ -25,37 +31,27 @@ export const calculateCart = ({ products, cartContainerElement, bonusPoints }) =
 
       const quantity = parseInt(cartItems[i].querySelector('span').textContent.split('x ')[1]);
       const itemTotal = currentItem.price * quantity;
-
       let discount = 0;
 
       itemCount += quantity;
-
       subtotalBeforeDiscount += itemTotal;
 
-      if (quantity >= 10) {
-        if (currentItem.id === 'p1') discount = 0.1;
-        else if (currentItem.id === 'p2') discount = 0.15;
-        else if (currentItem.id === 'p3') discount = 0.2;
-        else if (currentItem.id === 'p4') discount = 0.05;
-        else if (currentItem.id === 'p5') discount = 0.25;
+      if (quantity >= 10 && individualDiscounts[currentItem.id]) {
+        discount = individualDiscounts[currentItem.id];
       }
       totalAmount += itemTotal * (1 - discount);
     })();
   }
 
-  // 최종적으로 적용되는 할인율
   let discountRate = 0;
 
-  if (itemCount >= 30) {
-    // 대량 구매 시 적용되는 할인 금액
-    // 30개 이상 구매할 때 적용되는 25% 할인액
-    const bulkDiscountAmount = totalAmount * 0.25;
-    // 개별 할인 금액
+  if (itemCount >= bulkDiscountThreshold) {
+    const bulkDiscountAmount = totalAmount * bulkDiscountRate;
     const individualDiscountAmount = subtotalBeforeDiscount - totalAmount;
 
     if (bulkDiscountAmount > individualDiscountAmount) {
-      totalAmount = subtotalBeforeDiscount * (1 - 0.25);
-      discountRate = 0.25;
+      totalAmount = subtotalBeforeDiscount * (1 - bulkDiscountRate);
+      discountRate = bulkDiscountRate;
     } else {
       discountRate = (subtotalBeforeDiscount - totalAmount) / subtotalBeforeDiscount;
     }
@@ -64,12 +60,11 @@ export const calculateCart = ({ products, cartContainerElement, bonusPoints }) =
   }
 
   if (new Date().getDay() === 2) {
-    totalAmount *= 1 - 0.1;
-    discountRate = Math.max(discountRate, 0.1);
+    totalAmount *= 1 - tuesdayDiscountRate;
+    discountRate = Math.max(discountRate, tuesdayDiscountRate);
   }
 
   const sum = document.getElementById('cart-total');
-
   sum.textContent = '총액: ' + Math.round(totalAmount) + '원';
 
   if (discountRate > 0) {

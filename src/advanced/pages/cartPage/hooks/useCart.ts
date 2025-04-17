@@ -6,7 +6,12 @@ import { calculateDiscount } from '../services/calculateDiscount';
 import { setupIntervalWithDelay } from '../../../utils';
 import { suggestProduct } from '../services/suggestProduct';
 
-export const useCart = () => {
+export const useCart = (
+  lightningSaleInterval = 30000,
+  lightningSaleDelay = Math.random() * 10000,
+  suggestProductInterval = 60000,
+  suggestProductDelay = Math.random() * 20000
+) => {
   const [productsOptions, setProductsOptions] = useState<Product[]>(initialProducts);
   const productsOptionsRef = useRef(productsOptions);
   const [cartItems, setCartItems] = useState<Product[]>([]);
@@ -97,8 +102,8 @@ export const useCart = () => {
   useEffect(() => {
     const lightningSaleIntervalId = setupIntervalWithDelay(
       () => applyLightningSale(productsOptionsRef.current, setProductsOptions),
-      30000,
-      Math.random() * 10000
+      lightningSaleInterval,
+      lightningSaleDelay
     );
 
     return () => clearInterval(lightningSaleIntervalId);
@@ -109,8 +114,8 @@ export const useCart = () => {
       () => {
         suggestProduct(productsOptionsRef.current, lastSelectedItemId, setProductsOptions);
       },
-      60000,
-      Math.random() * 20000
+      suggestProductInterval,
+      suggestProductDelay
     );
 
     return () => clearInterval(intervalId);

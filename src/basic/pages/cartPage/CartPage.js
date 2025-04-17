@@ -29,9 +29,15 @@ const Layout = () => {
 };
 
 // 장바구니 페이지
-export const CartPage = ({ root }) => {
+export const CartPage = (
+  { root },
+  lightningSaleInterval = 30000,
+  suggestProductInterval = 60000,
+  lightningSaleDelay = Math.random() * 10000,
+  suggestProductDelay = Math.random() * 20000
+) => {
   // 마지막으로 선택한 상품과 다른 상품을 추천하기 위한 값
-  // 습관: 선택한 변수에는 과거형을 쓴다.
+  // 습관: 선택한 변수에는 과거형을 쓴다. ex) checked
   let lastSelectedItem;
   // 장바구니의 총 금액에 따라 적립되는 포인트
   const bonusPoints = 0;
@@ -48,21 +54,18 @@ export const CartPage = ({ root }) => {
   setupEventListeners();
 
   setupIntervalWithDelay(
-    applyLightningSale({ products, select, updateSelectOptions }),
-    30000,
-    Math.random() * 10000
+    applyLightningSale(products, select, updateSelectOptions),
+    lightningSaleInterval,
+    lightningSaleDelay
   );
 
   setupIntervalWithDelay(
-    suggestProduct({ products, lastSelectedItem, select, updateSelectOptions }),
-    60000,
-    Math.random() * 20000
+    suggestProduct(products, lastSelectedItem, select, updateSelectOptions),
+    suggestProductInterval,
+    suggestProductDelay
   );
 
   function setupEventListeners() {
-    // 추가 버튼 클릭시
-    // 있으면 수량 증가
-    // 없으면 새로 생성
     addCartButton.addEventListener('click', () => {
       const selectedItem = select.value;
 

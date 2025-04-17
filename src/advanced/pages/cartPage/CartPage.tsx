@@ -9,13 +9,13 @@ export default function CartPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product>(products[0]);
 
   const {
-    removeFromCart,
-    discountRate,
     cartItems,
     totalPrice,
     bonusPoints,
-    addToCart,
+    discountRate,
     productsOptions,
+    addToCart,
+    removeFromCart,
     increaseQuantity,
     decreaseQuantity,
   } = useCart();

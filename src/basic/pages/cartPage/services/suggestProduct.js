@@ -1,12 +1,21 @@
-export function suggestProduct(products, lastSelectedItem, select, updateSelectOptions) {
+export function suggestProduct(
+  products,
+  lastSelectedItem,
+  select,
+  updateSelectOptions,
+  additionalDiscountRate = 0.05
+) {
   if (lastSelectedItem) {
-    const suggestItem = products.find(function (item) {
+    const suggestItem = products.find((item) => {
       return item.id !== lastSelectedItem && item.stock > 0;
     });
 
     if (suggestItem) {
-      alert(suggestItem.name + '은(는) 어떠세요? 지금 구매하시면 5% 추가 할인!');
-      suggestItem.price = Math.round(suggestItem.price * 0.95);
+      const message = `${suggestItem.name}은(는) 어떠세요? 지금 구매하시면 ${additionalDiscountRate * 100}% 추가 할인!`;
+      alert(message);
+
+      suggestItem.price = Math.round(suggestItem.price * (1 - additionalDiscountRate));
+
       updateSelectOptions(products, select);
     }
   }
