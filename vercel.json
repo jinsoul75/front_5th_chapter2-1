@@ -2,8 +2,5 @@
   "builds": [
     { "src": "package.json", "use": "@vercel/static-build", "config": { "distDir": "dist" } }
   ],
-  "routes": [
-    { "src": "/basic/(.*)", "dest": "/basic/index.html" },
-    { "src": "/advanced/(.*)", "dest": "/advanced/index.html" }
-  ]
+  "routes": [{ "src": "/advanced/(.*)", "dest": "/advanced/index.html" }]
 }
