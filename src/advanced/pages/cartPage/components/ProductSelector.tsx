@@ -1,7 +1,7 @@
 import { Select } from '../../../components';
 import { Product } from '../../../types/product';
 
-// 습관: 타입이름에 props를 붙인다
+// 습관: 프롭스 타입 이름에 props를 붙인다
 interface ProductSelectorProps {
   products: Product[];
   selectedProduct: Product;

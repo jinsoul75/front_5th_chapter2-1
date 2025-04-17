@@ -3,30 +3,7 @@ import { updateSelectOptions } from './services/updateSelectOptions';
 import { calculateCart } from './services/calculateCart';
 import { applyLightningSale, suggestProduct } from './services';
 import { setupIntervalWithDelay } from '../../utils';
-import { OutOfStockList, ProductSelector, TotalDisplay, CartItemList } from './components';
-
-const Layout = () => {
-  return `
-  <div class="bg-gray-100 p-8">
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8">
-      <h1 class="text-2xl font-bold mb-4">장바구니</h1>
-      
-      <!-- 장바구니 아이템들이 들어갈 컨테이너 -->
-      ${CartItemList({ products })}
-
-      <!-- 총액 표시 -->
-      ${TotalDisplay({ total: 0 })}
-
-      <!-- 상품 선택 및 추가 영역 -->
-      ${ProductSelector({ products })}
-
-      <!-- 재고 상태 표시 -->
-      ${OutOfStockList({ products })}
-
-    </div>
-  </div>
-  `;
-};
+import { OutOfStockList, ProductSelector, TotalAmount, CartItemList } from './components';
 
 // 장바구니 페이지
 export const CartPage = (
@@ -41,6 +18,29 @@ export const CartPage = (
   let lastSelectedItem;
   // 장바구니의 총 금액에 따라 적립되는 포인트
   const bonusPoints = 0;
+
+  const Layout = () => {
+    return `
+      <div class="bg-gray-100 p-8">
+        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8">
+          <h1 class="text-2xl font-bold mb-4">장바구니</h1>
+          
+          <!-- 장바구니 아이템들이 들어갈 컨테이너 -->
+          ${CartItemList({ products })}
+  
+          <!-- 총액 표시 -->
+          ${TotalAmount({ totalPrice: 0, discountRate: 0, bonusPoints: 0 })}
+  
+          <!-- 상품 선택 및 추가 영역 -->
+          ${ProductSelector({ products })}
+  
+          <!-- 재고 상태 표시 -->
+          ${OutOfStockList({ products })}
+  
+        </div>
+      </div>
+    `;
+  };
 
   // 레이아웃 DOM요소 추가
   root.innerHTML = Layout();

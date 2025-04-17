@@ -1,7 +1,7 @@
 import { getStockStatus } from '../services';
 import { Product } from '../../../types';
 
-export default function OutOfStockList({ products }: { products: Product[]; lackStock?: number }) {
+export default function OutOfStockList({ products }: { products: Product[] }) {
   const stockStatus = getStockStatus(products);
 
   return (

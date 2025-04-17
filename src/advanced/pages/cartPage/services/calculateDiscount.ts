@@ -3,7 +3,22 @@
 // 화요일에는 추가 10% 할인 -> 기존 할인율과 비교해서 더 큰 할인율 적용
 import { Product } from '../../../types';
 
-export const calculateDiscount = (cartItems: Product[]) => {
+const DISCOUNT_THRESHOLDS = {
+  p1: 0.1,
+  p2: 0.15,
+  p3: 0.2,
+  p4: 0.05,
+  p5: 0.25,
+};
+
+export const calculateDiscount = (
+  cartItems: Product[],
+  discountThresholds = DISCOUNT_THRESHOLDS,
+  bulkDiscountThreshold = 30,
+  bulkDiscountRate = 0.25,
+  tuesdayDiscountRate = 0.1,
+  minimumDiscountQuantity = 10
+) => {
   let subtotalBeforeDiscount = 0;
   let totalAmount = 0;
   let itemCount = 0;
@@ -15,23 +30,19 @@ export const calculateDiscount = (cartItems: Product[]) => {
     itemCount += item.stock;
 
     let discount = 0;
-    if (item.stock >= 10) {
-      if (item.id === 'p1') discount = 0.1;
-      else if (item.id === 'p2') discount = 0.15;
-      else if (item.id === 'p3') discount = 0.2;
-      else if (item.id === 'p4') discount = 0.05;
-      else if (item.id === 'p5') discount = 0.25;
+    if (item.stock >= minimumDiscountQuantity) {
+      discount = discountThresholds[item.id as keyof typeof discountThresholds] || 0;
     }
     totalAmount += itemTotal * (1 - discount);
   });
 
-  if (itemCount >= 30) {
-    const bulkDiscountAmount = totalAmount * 0.25;
+  if (itemCount >= bulkDiscountThreshold) {
+    const bulkDiscountAmount = totalAmount * bulkDiscountRate;
     const individualDiscountAmount = subtotalBeforeDiscount - totalAmount;
 
     if (bulkDiscountAmount > individualDiscountAmount) {
-      totalAmount = subtotalBeforeDiscount * (1 - 0.25);
-      calculatedDiscountRate = 0.25;
+      totalAmount = subtotalBeforeDiscount * (1 - bulkDiscountRate);
+      calculatedDiscountRate = bulkDiscountRate;
     } else {
       calculatedDiscountRate = (subtotalBeforeDiscount - totalAmount) / subtotalBeforeDiscount;
     }
@@ -40,8 +51,8 @@ export const calculateDiscount = (cartItems: Product[]) => {
   }
 
   if (new Date().getDay() === 2) {
-    totalAmount *= 1 - 0.1;
-    calculatedDiscountRate = Math.max(calculatedDiscountRate, 0.1);
+    totalAmount *= 1 - tuesdayDiscountRate;
+    calculatedDiscountRate = Math.max(calculatedDiscountRate, tuesdayDiscountRate);
   }
 
   return { totalAmount, calculatedDiscountRate };

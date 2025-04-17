@@ -10,7 +10,8 @@ export const calculateCart = (
   individualDiscounts = { p1: 0.1, p2: 0.15, p3: 0.2, p4: 0.05, p5: 0.25 },
   bulkDiscountThreshold = 30,
   bulkDiscountRate = 0.25,
-  tuesdayDiscountRate = 0.1
+  tuesdayDiscountRate = 0.1,
+  discountDay = 2
 ) => {
   let totalAmount = 0;
   let itemCount = 0;
@@ -59,19 +60,19 @@ export const calculateCart = (
     discountRate = (subtotalBeforeDiscount - totalAmount) / subtotalBeforeDiscount;
   }
 
-  if (new Date().getDay() === 2) {
+  if (new Date().getDay() === discountDay) {
     totalAmount *= 1 - tuesdayDiscountRate;
     discountRate = Math.max(discountRate, tuesdayDiscountRate);
   }
 
-  const sum = document.getElementById('cart-total');
-  sum.textContent = '총액: ' + Math.round(totalAmount) + '원';
+  const totalAmountElement = document.getElementById('cart-total');
+  totalAmountElement.textContent = '총액: ' + Math.round(totalAmount) + '원';
 
   if (discountRate > 0) {
-    const span = document.createElement('span');
-    span.className = 'text-green-500 ml-2';
-    span.textContent = '(' + (discountRate * 100).toFixed(1) + '% 할인 적용)';
-    sum.appendChild(span);
+    const discountRateElement = document.createElement('span');
+    discountRateElement.className = 'text-green-500 ml-2';
+    discountRateElement.textContent = '(' + (discountRate * 100).toFixed(1) + '% 할인 적용)';
+    totalAmountElement.appendChild(discountRateElement);
   }
 
   updateStockInfo(products);

@@ -1,3 +1,3 @@
-export const calculatePoints = (amount: number) => {
-  return Math.floor(amount / 1000);
+export const calculatePoints = (amount: number, conversionRate = 1000) => {
+  return Math.floor(amount / conversionRate);
 };
