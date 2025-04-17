@@ -105,14 +105,16 @@ export const useCart = () => {
   }, []);
 
   useEffect(() => {
-    const suggestProductIntervalId = setupIntervalWithDelay(
-      () => suggestProduct(productsOptionsRef.current, lastSelectedItemId, setProductsOptions),
+    const intervalId = setupIntervalWithDelay(
+      () => {
+        suggestProduct(productsOptionsRef.current, lastSelectedItemId, setProductsOptions);
+      },
       60000,
       Math.random() * 20000
     );
 
-    return () => clearInterval(suggestProductIntervalId);
-  }, []);
+    return () => clearInterval(intervalId);
+  }, [lastSelectedItemId, productsOptionsRef]);
 
   return {
     cartItems,
