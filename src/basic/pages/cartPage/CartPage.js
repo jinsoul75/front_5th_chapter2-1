@@ -1,7 +1,7 @@
 import { products } from '../../data/products';
-import { updateSelectOptions } from '../../services/updateSelectOptions';
-import { calculateCart } from '../../services/calculateCart';
-import { applyLightningSale, suggestProduct } from '../../services';
+import { updateSelectOptions } from './services/updateSelectOptions';
+import { calculateCart } from './services/calculateCart';
+import { applyLightningSale, suggestProduct } from './services';
 import { setupIntervalWithDelay } from '../../utils';
 import { OutOfStockList, ProductSelector, TotalDisplay, CartItemList } from './components';
 
