@@ -1,5 +1,9 @@
 import { CartPage } from './pages/cartPage/CartPage';
 
-const root = document.getElementById('app');
+const main = () => {
+  const root = document.getElementById('app');
 
-CartPage({ root });
+  CartPage({ root });
+};
+
+main();

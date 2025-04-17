@@ -1,23 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Product } from '../../../types';
 import { applyLightningSale, calculatePoints } from '../services';
-import { products } from '../../../data';
+import { products as initialProducts } from '../../../data';
 import { calculateDiscount } from '../services/calculateDiscount';
 import { setupIntervalWithDelay } from '../../../utils';
+import { suggestProduct } from '../services/suggestProduct';
 
 export const useCart = () => {
-  const [productsOptions, setProductsOptions] = useState<Product[]>(products);
+  const [productsOptions, setProductsOptions] = useState<Product[]>(initialProducts);
+  const productsOptionsRef = useRef(productsOptions);
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [bonusPoints, setBonusPoints] = useState<number>(0);
   const [discountRate, setDiscountRate] = useState<number>(0);
+  const [lastSelectedItemId, setLastSelectedItemId] = useState<string | null>(null);
+
+  useEffect(() => {
+    productsOptionsRef.current = productsOptions;
+  }, [productsOptions]);
 
   const addToCart = (selectedProduct: Product | null, amount = 1) => {
-    const product = productsOptions.find((product) => product.id === selectedProduct?.id);
+    const product = productsOptionsRef.current.find(
+      (product) => product.id === selectedProduct?.id
+    );
+
+    setLastSelectedItemId(product?.id ?? null);
 
     if (product) {
       if (product.stock > 0) {
-        const newProductOptions = productsOptions.map((item) =>
+        const newProductOptions = productsOptionsRef.current.map((item) =>
           item.id === product.id ? { ...item, stock: item.stock - amount } : item
         );
         setProductsOptions(newProductOptions);
@@ -80,15 +91,28 @@ export const useCart = () => {
     }
   }, [cartItems]);
 
+  // 할인이 진행되면
+  // -> 옵션 할인 적용
+  // -> 카트 아이템에도 적용
   useEffect(() => {
-    const lightningSaleRate = 0.2;
+    const lightningSaleIntervalId = setupIntervalWithDelay(
+      () => applyLightningSale(productsOptionsRef.current, setProductsOptions),
+      30000,
+      Math.random() * 10000
+    );
 
-    const newPriceProducts = productsOptions.map((item) => ({
-      ...item,
-      price: item.price * (1 - lightningSaleRate / 100),
-    }));
-    console.log('newPriceProducts', newPriceProducts);
-  }, [productsOptions]);
+    return () => clearInterval(lightningSaleIntervalId);
+  }, []);
+
+  useEffect(() => {
+    const suggestProductIntervalId = setupIntervalWithDelay(
+      () => suggestProduct(productsOptionsRef.current, lastSelectedItemId, setProductsOptions),
+      60000,
+      Math.random() * 20000
+    );
+
+    return () => clearInterval(suggestProductIntervalId);
+  }, []);
 
   return {
     cartItems,

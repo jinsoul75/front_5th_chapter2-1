@@ -1,5 +1,9 @@
 export function setupIntervalWithDelay(callback: () => void, interval: number, delay: number) {
-  setTimeout(function () {
-    setInterval(callback, interval);
+  const intervalId = setInterval(callback, interval);
+
+  setTimeout(() => {
+    callback();
   }, delay);
+
+  return intervalId;
 }
